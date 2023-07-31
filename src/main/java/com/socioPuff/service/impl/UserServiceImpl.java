@@ -10,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
+
 /***
  * This class contains all business details for User Login Management
  * like for Influencer and Brand User Type
@@ -45,9 +47,11 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     public User getLogin(UserLogin user){
-            LOGGER.info("Login Request : " + user);
+            LOGGER.info("Login Request with user Details are : " + user);
             User dbUser = userRepo.getUserbyEmailId(user.getEmail());
-            LOGGER.info("User feteched " + dbUser);
+            byte[] decodedBytes = Base64.getDecoder().decode(dbUser.getPassword());
+            dbUser.setPassword(new String(decodedBytes));
+            LOGGER.info("User feteched with detail are " + dbUser);
             return dbUser ;
 
         }
@@ -57,7 +61,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userRegistrationDto.getEmail());
             user.setRole(userRegistrationDto.getRole());
             user.setMobile(userRegistrationDto.getMobile());
-            user.setPassword(userRegistrationDto.getPassword());
+            user.setPassword(Base64.getEncoder().encodeToString(userRegistrationDto.getPassword().getBytes()));
             user.setRole(userRegistrationDto.getRole());
             user.setIsLogin(userRegistrationDto.getIsLogin());
             return user;
