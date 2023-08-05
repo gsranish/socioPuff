@@ -1,4 +1,28 @@
 # socioPuff
+List of API's
+Brand :
+login
+logout
+sendOtp
+VerfiyOtp
+forgetPassword
+resendOtp
+dashboard
+getAllCampaigns
+createCampaign
+editCampaign
+deleteCampaign
+campaignStatus
+getAllInfluencers
+reportsAnalyaltics
+
+Influencers :
+createPage
+editPage
+dashboard
+repostAnalytics
+AllCampaignByInfluencer
+manageCampaign
 
 to test application running or not 
 curl --location 'localhost:9091/socioPuff/user/test'

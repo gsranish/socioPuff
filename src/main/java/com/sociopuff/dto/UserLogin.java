@@ -1,4 +1,4 @@
-package com.socioPuff.dto;
+package com.sociopuff.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
