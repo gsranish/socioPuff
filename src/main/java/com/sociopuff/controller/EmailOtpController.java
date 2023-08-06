@@ -22,7 +22,6 @@ public class EmailOtpController {
     @PostMapping("/send-email")
     public void sendEmail(@RequestParam String emailId) {
         LOGGER.info("EmailOtpController sendEmail api called ");
-
         emailService.sendEmail(emailId,null);
     }
 }

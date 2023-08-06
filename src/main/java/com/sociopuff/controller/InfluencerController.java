@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.sociopuff.constant.MessageConstant;
 import com.sociopuff.dto.Message;
 import com.sociopuff.entity.Influencer;
-import com.sociopuff.repo.InfluencerRepo;
+import com.sociopuff.service.InfluencerService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,13 +20,13 @@ public class InfluencerController {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(InfluencerController.class);
     @Autowired
-    private InfluencerRepo influencerRepo ;
+    private InfluencerService  influencerService ;
 
     @GetMapping("/all")
     public ResponseEntity<Message> getAllInfluencers() {
         ResponseEntity<Message> response;
         try {
-            List<Influencer> campaignList = influencerRepo.findAll();
+            List<Influencer> campaignList = influencerService.getAllInfluencers();
             Gson gson = new Gson();
             String jsonCartList = gson.toJson(campaignList);
             logger.info(jsonCartList);
@@ -37,7 +37,6 @@ public class InfluencerController {
             }
         } catch (Exception e) {
             response = new ResponseEntity<>(new Message(MessageConstant.FAIL, "Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
         }
         return response;
     }
@@ -46,7 +45,7 @@ public class InfluencerController {
     public ResponseEntity<Message> createInfluencer(@RequestBody Influencer influencer){
         ResponseEntity<Message> response = null ;
         try {
-            Influencer id = influencerRepo.save(influencer);
+            Influencer id = influencerService.createInfluencer(influencer);
             response = new ResponseEntity<>(new Message(MessageConstant.SUCCESS, id.getInfluencer_name()), HttpStatus.OK);
         } catch (Exception e){
             response = new ResponseEntity<Message>(new Message("FAIL"," Unable to Save"),HttpStatus.BAD_REQUEST);
@@ -59,7 +58,7 @@ public class InfluencerController {
     public ResponseEntity<Message> editInfluencer(@RequestBody Influencer influencer){
         ResponseEntity<Message> response = null ;
         try {
-            Influencer id = influencerRepo.saveAndFlush(influencer);
+            Influencer id = influencerService.editInfluencer(influencer);
             response = new ResponseEntity<>(new Message(MessageConstant.SUCCESS, id.getInfluencer_name()), HttpStatus.OK);
         } catch (Exception e){
             response = new ResponseEntity<Message>(new Message("FAIL"," Unable to Save"),HttpStatus.BAD_REQUEST);
@@ -72,10 +71,10 @@ public class InfluencerController {
     public ResponseEntity<Message> deleteInfluencer(@RequestBody Integer influencerId){
         ResponseEntity<Message> response = null ;
         try {
-            influencerRepo.deleteById(influencerId);
+            influencerService.deleteInfluencer(influencerId);
             response = new ResponseEntity<>(new Message(MessageConstant.SUCCESS, "Deleted"), HttpStatus.OK);
         } catch (Exception exception){
-            response = new ResponseEntity<Message>(new Message("FAIL"," Unable to Save"),HttpStatus.BAD_REQUEST);
+            response = new ResponseEntity<Message>(new Message("FAIL"," Unable to Delete "),HttpStatus.BAD_REQUEST);
             exception.printStackTrace();
         }
         return response;

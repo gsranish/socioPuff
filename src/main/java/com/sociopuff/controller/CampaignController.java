@@ -1,12 +1,10 @@
 package com.sociopuff.controller;
 
-
 import com.google.gson.Gson;
 import com.sociopuff.constant.MessageConstant;
 import com.sociopuff.dto.Message;
 import com.sociopuff.entity.Campaign;
-import com.sociopuff.entity.Influencer;
-import com.sociopuff.repo.CampaignRepo;
+import com.sociopuff.service.CampaignService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +20,12 @@ public class CampaignController {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CampaignController.class);
 
     @Autowired
-    private CampaignRepo campaignRepo ;
+    private CampaignService campaignService ;
 
     @GetMapping("/all")
     public ResponseEntity<Message> getAllCampaigns(){
         ResponseEntity<Message> response;
-        List<Campaign> campaignList = campaignRepo.findAll();
+        List<Campaign> campaignList = campaignService.getAllCampaigns();
         Gson gson = new Gson();
         String jsonCartList = gson.toJson(campaignList);
         logger.info(jsonCartList);
@@ -43,7 +41,7 @@ public class CampaignController {
     public ResponseEntity<Message> createCampaign(@RequestBody Campaign campaign){
         ResponseEntity<Message> response = null ;
         try {
-            campaignRepo.save(campaign);
+            campaignService.createCampaign(campaign);
         } catch (Exception e){
             response = new ResponseEntity<Message>(new Message("FAIL"," Unable to Save"),HttpStatus.BAD_REQUEST);
             e.printStackTrace();
@@ -55,7 +53,7 @@ public class CampaignController {
     public ResponseEntity<Message> editCampaign(@RequestBody Campaign campaign){
         ResponseEntity<Message> response = null ;
         try {
-            Campaign id = campaignRepo.saveAndFlush(campaign);
+            Campaign id = campaignService.editCampaign(campaign);
             response = new ResponseEntity<>(new Message(MessageConstant.SUCCESS, id.getCampaign_name()), HttpStatus.OK);
         } catch (Exception e){
             response = new ResponseEntity<Message>(new Message("FAIL"," Unable to Save"),HttpStatus.BAD_REQUEST);
@@ -68,7 +66,7 @@ public class CampaignController {
     public ResponseEntity<Message> deleteCampaign(@RequestBody Integer campaignId){
         ResponseEntity<Message> response = null ;
         try {
-            campaignRepo.deleteById(campaignId);
+            campaignService.deleteCampaign(campaignId);
             response = new ResponseEntity<>(new Message(MessageConstant.SUCCESS, "Deleted"), HttpStatus.OK);
         } catch (Exception exception){
             response = new ResponseEntity<Message>(new Message("FAIL"," Unable to Save"),HttpStatus.BAD_REQUEST);
