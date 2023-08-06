@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 /***
- *
+ * This class works like a Utility contains all methods used in application
  */
 public class SocioUtil {
 
